@@ -6,9 +6,6 @@ import os
 class Login:
     def __init__(self, data_folder = "./"):
         self.data_folder = data_folder
-        if not os.path.isfile(f"{self.data_folder}Users.json"):
-            with open(f"{self.data_folder}Users.json", "w") as f:
-                f.write("{\n    \n}")
     
     # Main Functions
 
