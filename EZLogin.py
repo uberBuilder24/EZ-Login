@@ -5,9 +5,9 @@ import os
 
 class Login:
     def __init__(self, data_folder = "./"):
-        self.data_folder = data_folder.rsplit("/", 1)[0]
-        if not os.path.isfile(f"{self.data_folder}/Users.json"):
-            with open(f"{self.data_folder}/Users.json", "w") as f:
+        self.data_folder = data_folder
+        if not os.path.isfile(f"{self.data_folder}Users.json"):
+            with open(f"{self.data_folder}Users.json", "w") as f:
                 f.write("{\n    \n}")
     
     # Main Functions
@@ -22,7 +22,7 @@ class Login:
         users[username]["password"] = hashlib.sha224(password.encode('utf-8')).hexdigest()
         users[username]["pfp"] = "https://static.thenounproject.com/png/275225-200.png"
         session["username"] = username
-        with open(f"{self.data_folder}/Users.json", "w") as f:
+        with open(f"{self.data_folder}Users.json", "w") as f:
             json.dump(users, f, indent=4)
 
     def login(self, username, password):
@@ -42,7 +42,7 @@ class Login:
     # Data Fetching Functions
 
     def get_users(self):
-        with open(f"{self.data_folder}/Users.json", "r") as f:
+        with open(f"{self.data_folder}Users.json", "r") as f:
             data = json.load(f)
         return data
 
@@ -70,7 +70,7 @@ class Login:
             if username in users:
                 if users.get(username)["password"] == hashlib.sha224(password.encode("utf-8")).hexdigest():
                     users[username] = new_username
-                    with open(f"{self.data_folder}/Users.json", "w") as f:
+                    with open(f"{self.data_folder}Users.json", "w") as f:
                         json.dump(users, f, indent=4)
                 else:
                     raise WrongPassword("That password is wrong.")
@@ -88,7 +88,7 @@ class Login:
         
         if users.get(username)["password"] == hashlib.sha224(old_password.encode("utf-8")).hexdigest():
             users[username]["password"] = new_password
-            with open(f"{self.data_folder}/Users.json", "w") as f:
+            with open(f"{self.data_folder}Users.json", "w") as f:
                 json.dump(users, f, indent=4)
         else:
             raise WrongPassword("That password is wrong.")
@@ -100,7 +100,7 @@ class Login:
             raise NotLoggedIn("That browser isn't logged in.")
         
         users[session["username"]]["pfp"] = new_pic
-        with open(f"{self.data_folder}/Users.json", "w") as f:
+        with open(f"{self.data_folder}Users.json", "w") as f:
             json.dump(users, f, indent=4)
 
 # Errors

@@ -16,6 +16,10 @@ app = Flask(__name__)
 app.secret_key = "Replace this with random letters..."
 loginManager = EZLogin.Login()
 ```
+Create a `Users.json` file. If you put it in a different directory from `login.py`, add the following to your code.
+```py
+loginManager.data_folder = "./path/to/data/folder/"
+```
 
 ### Functions
 #### Main Functions
