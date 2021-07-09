@@ -31,3 +31,11 @@ loginManager = EZLogin.Login()
 `change_username(password, new_username)` - Changes a user's username.
 `change_password(old_password, new_password)` - Changes a user's password.
 `change_pfp(new_pic)` - Changes a user's profile picture.
+
+### Errors
+```
+TakenUsername
+BadUsername
+WrongPassword
+NotLoggedIn
+```
