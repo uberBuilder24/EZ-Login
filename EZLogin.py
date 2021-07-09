@@ -1,13 +1,11 @@
-from flask import Flask, session
 import hashlib
 import json
 import os
 
-app = Flask(__name__)
-app.secret_key = "Secret"
-
 class Login:
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
+
         if not os.path.isfile("Users.json"):
             with open("Users.json", "w") as f:
                 f.write("{\n    \n}")
@@ -23,7 +21,7 @@ class Login:
         users[username] = {}
         users[username]["password"] = hashlib.sha224(password.encode('utf-8')).hexdigest()
         users[username]["pfp"] = "https://static.thenounproject.com/png/275225-200.png"
-        session["username"] = username
+        self.app.session["username"] = username
         with open("Users.json", "w") as f:
             json.dump(users, f, indent=4)
 
@@ -32,14 +30,14 @@ class Login:
 
         if username in users:
             if users.get(username)["password"] == hashlib.sha224(password.encode("utf-8")).hexdigest():
-                session["username"] = username
+                self.app.session["username"] = username
             else:
                 raise WrongPassword("That password is wrong.")
         else:
             raise BadUsername("That username doesn't exist.")
 
     def logout(self):
-        session.clear()
+        self.app.session.clear()
     
     # Data Fetching Functions
 
@@ -54,7 +52,7 @@ class Login:
 
     def logged_in(self):
         try:
-            if session["username"]:
+            if self.app.session["username"]:
                 return True
         except:
             return False
@@ -66,7 +64,7 @@ class Login:
 
         if not self.logged_in():
             raise NotLoggedIn("That browser isn't logged in.")
-        username = session["username"]
+        username = self.app.session["username"]
 
         if username == new_username:
             if username in users:
@@ -86,7 +84,7 @@ class Login:
 
         if not self.logged_in():
             raise NotLoggedIn("That browser isn't logged in.")
-        username = session["username"]
+        username = self.app.session["username"]
         
         if users.get(username)["password"] == hashlib.sha224(old_password.encode("utf-8")).hexdigest():
             users[username]["password"] = new_password
@@ -101,7 +99,7 @@ class Login:
         if not self.logged_in():
             raise NotLoggedIn("That browser isn't logged in.")
         
-        users[session["username"]]["pfp"] = new_pic
+        users[self.app.session["username"]]["pfp"] = new_pic
         with open("Users.json", "w") as f:
             json.dump(users, f, indent=4)
 
