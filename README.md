@@ -17,25 +17,17 @@ loginManager = EZLogin.Login()
 ```
 
 ### Functions
-`loginManager.signup(username, password)` - This will create a user in the JSON.
+#### Main Functions
+`signup(username, password)` - Creates a new user.
+`login(username, password)` - Signs a user in.
+`logout()` - Signs a user out.
 
-`loginManager.login(username, password)` - This will login a already-existing user.
+#### Data Fetching Functions
+`get_users()` - Returns all the users.
+`get_user_data(username)` - Return data on a specific user.
+`logged_in()` - Returns whether a browser is logged in.
 
-`loginManager.logged_in()` - This will return a bool (True or False) containing whether or not the user is logged in.
-
-`loginManager.logout()` - This will logout the current user.
-
-`loginManager.get_users()` - This will return a dictionary object containing all the users.
-
-`loginManager.get_user_data(user_id)` - This will return the data for a specific user.
-
-### Errors
-Each error has it's own string:
-
-`"AE"` - Username Already Exixts. (`Signup` function).
-
-`"IU"` - Invalid Username. (`Login` function).
-
-`"IP"` - Invalid Password. (`Login` function).
-
-However, if the `signup` or `login` function return `True`, the action was successful.
+#### Data Changing Functions
+`change_username(password, new_username)` - Changes a user's username.
+`change_password(old_password, new_password)` - Changes a user's password.
+`change_pfp(new_pic)` - Changes a user's profile picture.
