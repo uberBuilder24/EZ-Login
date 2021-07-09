@@ -1,4 +1,4 @@
-from Flask import session
+from flask import session
 import hashlib
 import json
 import os
