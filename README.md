@@ -8,12 +8,13 @@ Enter the following into your Command Line:
 ```sh
 cd /dir/to/project/
 git clone https://github.com/uberBuilder24/EZ-Login
+pip install -r requirement.txt
 ```
 After you download the source code, you you need to import the library. To do so, add `import flask` and `import EZLogin` to the top of your Python file. Make sure the `EZLogin.py` file and the file you wish to use the library in are in the same directory. To initialize the library, add the following code after your imports.
 ```py
 app = Flask(__name__)
 app.secret_key = "Replace this with random letters..."
-loginManager = EZLogin.Login(app)
+loginManager = EZLogin.Login()
 ```
 
 ### Functions

@@ -1,13 +1,13 @@
+from Flask import session
 import hashlib
 import json
 import os
 
 class Login:
-    def __init__(self, app):
-        self.app = app
-
-        if not os.path.isfile("Users.json"):
-            with open("Users.json", "w") as f:
+    def __init__(self, data_folder = "./"):
+        self.data_folder = data_folder.rsplit("/", 1)[0]
+        if not os.path.isfile(f"{self.data_folder}/Users.json"):
+            with open(f"{self.data_folder}/Users.json", "w") as f:
                 f.write("{\n    \n}")
     
     # Main Functions
@@ -21,8 +21,8 @@ class Login:
         users[username] = {}
         users[username]["password"] = hashlib.sha224(password.encode('utf-8')).hexdigest()
         users[username]["pfp"] = "https://static.thenounproject.com/png/275225-200.png"
-        self.app.session["username"] = username
-        with open("Users.json", "w") as f:
+        session["username"] = username
+        with open(f"{self.data_folder}/Users.json", "w") as f:
             json.dump(users, f, indent=4)
 
     def login(self, username, password):
@@ -30,19 +30,19 @@ class Login:
 
         if username in users:
             if users.get(username)["password"] == hashlib.sha224(password.encode("utf-8")).hexdigest():
-                self.app.session["username"] = username
+                session["username"] = username
             else:
                 raise WrongPassword("That password is wrong.")
         else:
             raise BadUsername("That username doesn't exist.")
 
     def logout(self):
-        self.app.session.clear()
+        session.clear()
     
     # Data Fetching Functions
 
     def get_users(self):
-        with open("Users.json", "r") as f:
+        with open(f"{self.data_folder}/Users.json", "r") as f:
             data = json.load(f)
         return data
 
@@ -52,7 +52,7 @@ class Login:
 
     def logged_in(self):
         try:
-            if self.app.session["username"]:
+            if session["username"]:
                 return True
         except:
             return False
@@ -64,13 +64,13 @@ class Login:
 
         if not self.logged_in():
             raise NotLoggedIn("That browser isn't logged in.")
-        username = self.app.session["username"]
+        username = session["username"]
 
         if username == new_username:
             if username in users:
                 if users.get(username)["password"] == hashlib.sha224(password.encode("utf-8")).hexdigest():
                     users[username] = new_username
-                    with open("Users.json", "w") as f:
+                    with open(f"{self.data_folder}/Users.json", "w") as f:
                         json.dump(users, f, indent=4)
                 else:
                     raise WrongPassword("That password is wrong.")
@@ -84,11 +84,11 @@ class Login:
 
         if not self.logged_in():
             raise NotLoggedIn("That browser isn't logged in.")
-        username = self.app.session["username"]
+        username = session["username"]
         
         if users.get(username)["password"] == hashlib.sha224(old_password.encode("utf-8")).hexdigest():
             users[username]["password"] = new_password
-            with open("Users.json", "w") as f:
+            with open(f"{self.data_folder}/Users.json", "w") as f:
                 json.dump(users, f, indent=4)
         else:
             raise WrongPassword("That password is wrong.")
@@ -99,8 +99,8 @@ class Login:
         if not self.logged_in():
             raise NotLoggedIn("That browser isn't logged in.")
         
-        users[self.app.session["username"]]["pfp"] = new_pic
-        with open("Users.json", "w") as f:
+        users[session["username"]]["pfp"] = new_pic
+        with open(f"{self.data_folder}/Users.json", "w") as f:
             json.dump(users, f, indent=4)
 
 # Errors
